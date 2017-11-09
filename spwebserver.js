@@ -40,8 +40,16 @@ webApp.get("/", function(req, res) {
 
 webApp.post("/submit", function(req, res) {
    console.log("submit hit!");
-	console.log(util.inspect( req.body));
+//	console.log(util.inspect( req.body));
 
+   var input = req.body;
+   input.replace(/\s+/g,' ').trim();
+   console.log(util.inspect(input));
+   fs.appendFile('submissions.txt', util.inspect(input), (err) => {
+      if(err)
+        throw error;
+      console.log('log updated');
+   });
 
    res.type('json');
    res.send(req.body);
@@ -53,4 +61,4 @@ webApp.post("/submit", function(req, res) {
 
 
 var server = webApp.listen(program.port, program.webServerIp);
-//var server = webApp.listen(7100, program.webServerIp);
+
