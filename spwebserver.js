@@ -34,7 +34,7 @@ var LineByLineReader = require("line-by-line");
  * Command line options
  */
 program
-    .version('0.7.0')
+    .version('0.7.1')
     .option('-p, --port [portNum]','Sets the port for the webserver to listen on. [Default: 7100]',7100)
     .option('-w, --web-server-ip [webServerIp]','Binds the webserver to a specific IP Address','localhost')
     .parse(process.argv);
