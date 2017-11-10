@@ -22,6 +22,11 @@ var LineByLineReader = require("line-by-line");
  *          - Dynamic point file generation
  *          - Delete old submission data @ startup
  *          - URL 'report' displays list of submitted data
+ * 0.7.1 - Added multiple features
+ *          - Added support to serve images
+ *          - Changed the image size to be smaller
+ *          - Added a page title (for tabbed browsing)
+ *          - GNUPlot now exports to images folder
  * 
  */
 
@@ -36,6 +41,16 @@ program
 
 
 var webApp = express();
+
+webApp.use(express.static('./images'));
+
+webApp.use(bodyParser.urlencoded({
+   extended:false
+} ) );
+
+webApp.use(bodyParser.json({
+   strict:true
+} ) );
 
 var count = 0;
 
@@ -59,17 +74,6 @@ fs.writeFile("./submissions.p", "# Entry(1), Value(2)\n", function(err) {
    }
    waitSync(0.5);
 });
-
-webApp.use(bodyParser.urlencoded({
-   extended:false
-} ) );
-
-webApp.use(bodyParser.json({
-   strict:true
-} ) );
-
-console.log("port = " + program.port);
-console.log("ipaddy = " + program.webServerIp);
 
 webApp.get("/", function(req, res) {
    console.log("Root hit!");
@@ -116,8 +120,8 @@ webApp.get("/report", function(req,res) {
    console.log("Generating Report!");
 
    gnuplot()
-      .set('term png small size 1024,768')
-      .set('output "./gnuplot.png"')
+      .set('term png small size 640,480')
+      .set('output "./images/gnuplot.png"')
       .set('title "sensor over time"')
       .set('xlabel "Entry #"')
       .set('xtics 1')
@@ -130,8 +134,8 @@ webApp.get("/report", function(req,res) {
       .plot('"./submissions.p" lt 1 title "Sensor over time"')
       .end();
 
-   var page ="\n\n<!DOCTYPE html>\n<html>\n<body>\n<h1>Senior Project - Sensor Over Time Report</h1>\n";
-   var graph = '\n\t\t<img src="gnuplot.png" alt="Sensor Data over time" height="768" width="1024">\n'; 
+   var page ="\n\n<!DOCTYPE html>\n<html>\n<title>Sensor Data Graph</title><body>\n<h1>Senior Project - Sensor Over Time Report</h1>\n";
+   var graph = '\n\t\t<img src="./gnuplot.png" alt="Sensor Data over time" height="480" width="640">\n'; 
    var tail = "\n</body>\n</html>\n";
 
    page = page + graph;
