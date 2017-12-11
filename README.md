@@ -25,7 +25,10 @@ A convenience script (submit.sh) creates a random level and a date the scripts w
 
 The 'review' URL services HTTP GET commands. This URL method will display the content of the flat file for analysis as well as a graph of the levels since the app was started.
 
-![./images/gnuplot.png](./images/gnuplot.png)
+![./images/gnuplot_static.png](./images/gnuplot_static.png)
 
 
+Sequence Diagram
+================
 
+The documentation for this application was generated using the Markdown language. Images were generated (live) by the webserver. Sequence Diagrams were generated using ![PlantUML](http://plantuml.com/)
