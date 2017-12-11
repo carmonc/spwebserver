@@ -92,18 +92,18 @@ fs.writeFile("./submissions.p", "# Entry(1), Value(2)\n", function(err) {
    waitSync(0.5);
 });
 
-fs.exists("./jsonreport.txt", function(exists) {
-   if(exists) {
-      console.log("Deleting previous submission json file....");
-      fs.unlink("./jsonreport.txt");
-      waitSync(0.5);
-      fs.writeFile("./jsonreport.txt", "", function(err) {
-         if(err) {
-            return console.log(err);
-         }
-      });
-   }
-});
+//fs.exists("./jsonreport.txt", function(exists) {
+//   if(exists) {
+//      console.log("Deleting previous submission json file....");
+//      fs.unlink("./jsonreport.txt");
+//      waitSync(0.5);
+//      fs.writeFile("./jsonreport.txt", "", function(err) {
+//         if(err) {
+//            return console.log(err);
+//         }
+//      });
+//   }
+//});
 
 //Is this a duplicate (from the above)? Required? FIXME!
 fs.writeFile("./jsonreport.txt", "", function(err) {
@@ -162,7 +162,6 @@ webApp.post("/submit", function(req, res) {
  */
 function createGraph() {
 
-<<<<<<< Updated upstream
    console.log("Creating Graph");
    gnuplot()
       .set('term png small size 640,480')
@@ -172,7 +171,7 @@ function createGraph() {
       .set('xtics 1')
       .set('ylabel "sensor level"')
       .set('xrange []')
-      .set('yrange []')
+      .set('yrange [0:]')
       .set('grid')
       .set('mytics 5')
       .set('style data linespoints')
@@ -187,9 +186,9 @@ webApp.get("/report", function(req,res) {
 
    console.log("Generating Report!");
 
-   if(fs.exists("./submissions.p", function(exists) {
+//   if(fs.exists("./submissions.p", function(exists) {
       createGraph();
-   }));
+//   }));
 
    var page ="\n\n<!DOCTYPE html>\n<html>\n<title>Sensor Data Graph</title><body>\n<h1>Senior Project - Sensor Over Time Report</h1>\n";
    var graph = '\n\t\t<img src="./gnuplot.png" alt="Sensor Data over time" height="480" width="640">\n'; 
