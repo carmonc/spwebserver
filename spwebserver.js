@@ -27,14 +27,15 @@ var LineByLineReader = require("line-by-line");
  *          - Changed the image size to be smaller
  *          - Added a page title (for tabbed browsing)
  *          - GNUPlot now exports to images folder
- * 
+ * 0.7.2 - Clearing all data from previous instance
+ *          - Data files deleted from previous executions
  */
 
 /**
  * Command line options
  */
 program
-    .version('0.7.1')
+    .version('0.7.2')
     .option('-p, --port [portNum]','Sets the port for the webserver to listen on. [Default: 7100]',7100)
     .option('-w, --web-server-ip [webServerIp]','Binds the webserver to a specific IP Address','localhost')
     .parse(process.argv);
@@ -91,6 +92,27 @@ fs.writeFile("./submissions.p", "# Entry(1), Value(2)\n", function(err) {
    waitSync(0.5);
 });
 
+fs.exists("./jsonreport.txt", function(exists) {
+   if(exists) {
+      console.log("Deleting previous submission json file....");
+      fs.unlink("./jsonreport.txt");
+      waitSync(0.5);
+      fs.writeFile("./jsonreport.txt", "", function(err) {
+         if(err) {
+            return console.log(err);
+         }
+      });
+   }
+});
+
+//Is this a duplicate (from the above)? Required? FIXME!
+fs.writeFile("./jsonreport.txt", "", function(err) {
+   if(err) {
+      return console.log(err);
+   }
+   waitSync(0.5);
+});
+
 webApp.get("/", function(req, res) {
    console.log("Root hit!");
 
@@ -140,6 +162,7 @@ webApp.post("/submit", function(req, res) {
  */
 function createGraph() {
 
+<<<<<<< Updated upstream
    console.log("Creating Graph");
    gnuplot()
       .set('term png small size 640,480')
@@ -164,7 +187,9 @@ webApp.get("/report", function(req,res) {
 
    console.log("Generating Report!");
 
-   createGraph();
+   if(fs.exists("./submissions.p", function(exists) {
+      createGraph();
+   }));
 
    var page ="\n\n<!DOCTYPE html>\n<html>\n<title>Sensor Data Graph</title><body>\n<h1>Senior Project - Sensor Over Time Report</h1>\n";
    var graph = '\n\t\t<img src="./gnuplot.png" alt="Sensor Data over time" height="480" width="640">\n'; 
@@ -197,7 +222,7 @@ webApp.get("/report", function(req,res) {
 });
 
 /**
- * This URI allows the user to download the graph dicrectly.
+ * This URI allows the user to download the graph directly.
  */
 webApp.get("/getGraph", function(req,res) {
    console.log("getGraph entered");
